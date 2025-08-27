@@ -46,7 +46,10 @@ const LoginPage = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
     setErrors({});
 
     try {
-      const result = await authService.login(formData.email, formData.password);
+      const result = await authService.login({
+        email: formData.email,
+        password: formData.password,
+      });
 
       if (result.success) {
         setSuccessMessage("Login successful! Welcome back.");

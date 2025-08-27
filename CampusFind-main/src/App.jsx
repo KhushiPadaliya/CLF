@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import AboutUsPage from "./pages/AboutUsPage";
+import ContactUsPage from "./pages/ContactUsPage";
 import ProfileDropdown from "./components/ProfileDropdown";
 import authService from "./services/authService";
 
@@ -27,7 +29,7 @@ const LostFoundHomepage = () => {
   const [activeTab, setActiveTab] = useState("lost");
   const [scrollY, setScrollY] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [currentPage, setCurrentPage] = useState("home"); // "home", "login", "signup"
+  const [currentPage, setCurrentPage] = useState("home"); // "home", "login", "signup", "about", "contact"
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const containerRef = useRef(null);
@@ -191,6 +193,16 @@ const LostFoundHomepage = () => {
     setCurrentPage("home");
   };
 
+  const handleGoToAbout = () => {
+    setCurrentPage("about");
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleGoToContact = () => {
+    setCurrentPage("contact");
+    setIsMobileMenuOpen(false);
+  };
+
   const handleLoginSuccess = () => {
     const user = authService.getCurrentUser();
     setCurrentUser(user);
@@ -226,6 +238,14 @@ const LostFoundHomepage = () => {
         onSignupSuccess={handleLoginSuccess}
       />
     );
+  }
+
+  if (currentPage === "about") {
+    return <AboutUsPage onBack={handleBackToHome} />;
+  }
+
+  if (currentPage === "contact") {
+    return <ContactUsPage onBack={handleBackToHome} />;
   }
 
   return (
@@ -273,16 +293,34 @@ const LostFoundHomepage = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
-            {["How it Works", "Community", "Contact"].map((item, index) => (
-              <a
-                key={item}
-                href="#"
-                className="relative text-gray-300 hover:text-white transition-colors duration-300 group"
-              >
-                {item}
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300" />
-              </a>
-            ))}
+            <button
+              onClick={handleGoToAbout}
+              className="relative text-gray-300 hover:text-white transition-colors duration-300 group"
+            >
+              About Us
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300" />
+            </button>
+            <a
+              href="#"
+              className="relative text-gray-300 hover:text-white transition-colors duration-300 group"
+            >
+              How it Works
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300" />
+            </a>
+            <a
+              href="#"
+              className="relative text-gray-300 hover:text-white transition-colors duration-300 group"
+            >
+              Community
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300" />
+            </a>
+            <button
+              onClick={handleGoToContact}
+              className="relative text-gray-300 hover:text-white transition-colors duration-300 group"
+            >
+              Contact
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300" />
+            </button>
 
             {/* Show Profile Dropdown when logged in, otherwise show Sign In button */}
             {currentUser ? (
@@ -314,16 +352,32 @@ const LostFoundHomepage = () => {
         {isMobileMenuOpen && (
           <div className="lg:hidden absolute top-full left-4 right-4 mt-2 bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-4 z-30">
             <div className="flex flex-col space-y-4">
-              {["How it Works", "Community", "Contact"].map((item, index) => (
-                <a
-                  key={item}
-                  href="#"
-                  onClick={closeMobileMenu}
-                  className="text-gray-300 hover:text-white transition-colors duration-300 py-2"
-                >
-                  {item}
-                </a>
-              ))}
+              <button
+                onClick={handleGoToAbout}
+                className="text-gray-300 hover:text-white transition-colors duration-300 py-2 text-left"
+              >
+                About Us
+              </button>
+              <a
+                href="#"
+                onClick={closeMobileMenu}
+                className="text-gray-300 hover:text-white transition-colors duration-300 py-2"
+              >
+                How it Works
+              </a>
+              <a
+                href="#"
+                onClick={closeMobileMenu}
+                className="text-gray-300 hover:text-white transition-colors duration-300 py-2"
+              >
+                Community
+              </a>
+              <button
+                onClick={handleGoToContact}
+                className="text-gray-300 hover:text-white transition-colors duration-300 py-2 text-left"
+              >
+                Contact
+              </button>
               <div className="flex flex-col space-y-3 pt-4 border-t border-gray-700/50">
                 {/* Show Profile info and logout when logged in, otherwise show Sign In/Up buttons */}
                 {currentUser ? (
@@ -665,18 +719,34 @@ const LostFoundHomepage = () => {
               Reuniting students with their belongings, one find at a time
             </p>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-8 text-xs sm:text-sm mb-8 sm:mb-12">
-              {["Privacy Policy", "Terms of Service", "Support", "About"].map(
-                (link, index) => (
-                  <a
-                    key={link}
-                    href="#"
-                    className="text-gray-400 hover:text-white transition-all duration-300 relative group"
-                  >
-                    {link}
-                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300" />
-                  </a>
-                )
-              )}
+              <a
+                href="#"
+                className="text-gray-400 hover:text-white transition-all duration-300 relative group"
+              >
+                Privacy Policy
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300" />
+              </a>
+              <a
+                href="#"
+                className="text-gray-400 hover:text-white transition-all duration-300 relative group"
+              >
+                Terms of Service
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300" />
+              </a>
+              <a
+                href="#"
+                className="text-gray-400 hover:text-white transition-all duration-300 relative group"
+              >
+                Support
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300" />
+              </a>
+              <button
+                onClick={handleGoToAbout}
+                className="text-gray-400 hover:text-white transition-all duration-300 relative group"
+              >
+                About
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300" />
+              </button>
             </div>
 
             <div className="pt-6 sm:pt-8 border-t border-gray-800/50">

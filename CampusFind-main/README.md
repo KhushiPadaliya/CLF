@@ -1,0 +1,175 @@
+# Objectives
+
+- Identify ambiguities, inconsistencies, and incompleteness in a requirements specification for a campus lost & found system.
+
+- Identify and state functional requirements for a comprehensive campus lost & found management system.
+
+- Identify and state non-functional requirements including performance, security, and scalability constraints.
+
+- Design a comprehensive system architecture using Node.js, PostgreSQL, and Socket.io for real-time communication.
+
+# System Overview
+
+The Campus Lost & Found Management System (CLFMS) is a web-based application designed to streamline the process of reporting, searching, and recovering lost items within a college campus. The system addresses the common problem of students losing personal belongings and the inefficient manual processes currently used by campus security and administration.
+
+The CLFMS is a secure, web-based application that automates the lost and found process for educational institutions. The system will serve multiple user types including students, campus security personnel, administrative staff, and good samaritans by providing a centralized platform for managing lost and found items, facilitating communication between finders and owners, and ensuring secure item recovery processes.
+
+The CLFMS will allow:
+
+- **Students** to report lost items, search for found items, and communicate with finders through secure messaging.
+
+- **Campus Security** to manage found items, verify ownership claims, and coordinate secure item returns.
+
+- **Administrative Staff** to oversee system operations, generate comprehensive reports, and manage user accounts and permissions.
+
+- **Good Samaritans** to report found items and connect with rightful owners through the platform.
+
+The system will be accessible through web browsers and mobile devices, ensuring 24/7 availability for the campus community. All sensitive communications and personal information will be encrypted and protected through role-based access controls.
+
+# Functional Requirements
+
+## Identification of Functional Requirements
+
+From the system overview and problem analysis, the following key functionalities are identified:
+
+| **ID** | **Requirement**                    | **Priority** |
+| ------ | ---------------------------------- | ------------ |
+| FR1    | User Registration & Authentication | High         |
+| FR2    | Lost Item Reporting with Photos    | High         |
+| FR3    | Found Item Reporting               | High         |
+| FR4    | Item Search with Filters           | High         |
+| FR5    | Real-time Messaging System         | High         |
+| FR6    | Item Ownership Verification        | High         |
+| FR7    | Campus Location Tagging            | Medium       |
+| FR8    | Item Status Management             | Medium       |
+
+# Identification of Non-Functional Requirements
+
+## Performance Requirements
+
+1. The system shall support at least 500 concurrent users during peak hours (class change times, lunch breaks) without performance degradation.
+
+2. Search queries must complete within 2 seconds under normal load conditions.
+
+3. Real-time messaging through Socket.io must deliver messages within 1 second of sending.
+
+4. Database item lookups must complete within 1 second for up to 10,000 records.
+
+5. Photo uploads must process within 5 seconds for files up to 5MB in size.
+
+## Security Requirements
+
+6. All client-server communication must use HTTPS/TLS encryption for data protection.
+
+7. **Role-based access control:**
+
+   - **Students:** View/edit own items, search all items, communicate with finders
+   - **Security:** Manage found items, verify ownership claims
+   - **Admin:** Full system access, user management, generate reports
+
+8. Personal contact information shall only be shared after mutual consent between parties.
+
+## Software Quality Attributes
+
+12. **Availability:** ≥ 99.5% uptime during academic hours (6 AM - 12 AM).
+
+13. **Usability:** Intuitive interface requiring ≤ 5 minutes for new user onboarding.
+
+14. **Scalability:** Microservices architecture supporting horizontal scaling for growing user base.
+
+15. **Maintainability:** Modular codebase with separation of concerns using MVC pattern.
+
+16. **Reliability:** Automatic data backups and disaster recovery procedures must be implemented.
+
+## Database Requirements
+
+17. Use PostgreSQL 14+ as the primary database with the following core table structure:
+
+```sql
+-- Users Table
+Users (
+  user_id UUID PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  full_name VARCHAR(255) NOT NULL,
+  role ENUM('student', 'security', 'admin') DEFAULT 'student',
+  phone VARCHAR(20),
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Items Table
+Items (
+  item_id UUID PRIMARY KEY,
+  reporter_id UUID REFERENCES Users(user_id),
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  category VARCHAR(100) NOT NULL,
+  status ENUM('lost', 'found', 'recovered', 'claimed') NOT NULL,
+  location VARCHAR(255),
+  campus_building VARCHAR(100),
+  date_lost_found TIMESTAMP,
+  urgency ENUM('low', 'medium', 'high', 'urgent') DEFAULT 'medium',
+  reward_amount DECIMAL(10,2),
+  photos JSONB,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Additional supporting tables: Matches, Conversations, Messages, Claims
+```
+
+## Technology Stack & Design Constraints
+
+18. **Backend (Node.js):**
+
+    - Framework: Express.js with TypeScript
+    - Real-time Communication: Socket.io for chat functionality
+    - Authentication: JWT with refresh tokens
+    - File Storage: Multer + AWS S3 or local storage
+    - API Design: RESTful APIs with GraphQL for complex queries
+
+19. **Frontend:**
+
+    - Framework: React.js with TypeScript
+    - UI Library: Tailwind CSS + Headless UI
+    - Real-time: Socket.io-client
+    - State Management: Redux Toolkit or Zustand
+    - Mobile Support: Responsive design (Mobile-first approach)
+
+20. **Database & Infrastructure:**
+    - Primary Database: PostgreSQL 14+
+    - Caching: Redis for session management and real-time features
+    - Message Queue: Bull Queue for background jobs
+    - Deployment: Docker containers on AWS/Digital Ocean
+    - Monitoring: Winston logging + Application monitoring
+
+## Integration Requirements
+
+21. **College Email System:** Integration with institutional email for student verification.
+
+22. **Campus Map Services:** Integration with existing campus mapping systems for location services.
+
+23. **Notification Services:** Email and SMS notifications for important updates and matches.
+
+24. **File Storage:** Cloud storage integration for secure photo uploads and management.
+
+25. **Analytics:** Integration with analytics tools for usage insights and system optimization.
+
+## Compliance & Legal Requirements
+
+26. **Data Privacy:** GDPR/CCPA compliance for student data protection and privacy.
+
+27. **Educational Records:** FERPA compliance for handling student information.
+
+28. **Accessibility:** WCAG 2.1 AA compliance for accessibility standards.
+
+29. **Content Moderation:** Systems to prevent misuse and inappropriate content sharing.
+
+# Conclusion
+
+This Software Requirements Specification provides a comprehensive framework for developing the Campus Lost & Found Management System. The system addresses critical needs in campus item recovery while ensuring security, scalability, and user-friendly operation. The modular architecture using Node.js, PostgreSQL, and Socket.io provides a robust foundation for real-time communication and efficient data management.
+
+The specification balances functional requirements for core system features with non-functional requirements ensuring performance, security, and maintainability. The role-based access control system ensures appropriate permissions while the real-time messaging system facilitates efficient communication between item owners and finders.
+
+Implementation of this system will significantly improve the efficiency of lost and found operations on campus, reducing the burden on administrative staff while providing students with a modern, accessible platform for item recovery.
